@@ -1,22 +1,132 @@
 body {
+    margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    margin-right: 250px;
-}
-aside {
-    top: 0;
-    right: 0;
-    padding: 10px;
-    position: fixed;
-    font-style: italic;
-    background-color: lightgray;
-}
-.center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
+    font-size: 18px;
 }
 
-div h2 {
-    color: blue;
+nav {
+    position: fixed;
+    font-size: 20px;
+    font-weight: 700;
+    background-color: #9000ff;
+    width: 100%;
+    top: 0;
+    box-shadow: 0 0 20px 5px black;
+}
+.navdiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+li {
+    display: inline-block;
+}
+nav a {
+    margin-right: 10px;
+    color: white;
+    text-decoration: none;
+}
+nav a:hover {
+    background-color: aqua;
+    color: black;
+}
+
+.front {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-right: 100px;
+}
+.text {
+    font-size: 20px;
+    color: white;
+    margin-top: 150px;
+    margin-bottom: 150px;
+    padding: 6%;
+}
+.text:hover {
+    color: gold;
+}
+.image {
+    border-radius: 20%;
+    overflow: hidden;
+    margin-top: 150px;
+    margin-bottom: 150px;
+}
+.image img {
+    width: 400px;
+}
+
+.homee {
+    background-image: url(images/IMG_2982.JPG);
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+}
+
+main {
+    text-align: justify;
+    margin: 4%;
+}
+
+.content h1 {
+    text-align: center;
+}
+
+.content {
+    
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+}
+
+.gallery img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.contact ul li a {
+    text-decoration: none;
+    color: black;
+}
+ul li a:hover{
+    background-color: #9000ff;
+    color: gold;
+}
+
+
+form {
+    font-weight: bold;
+}
+
+p a {
+    text-decoration: none;
+    color: black;
+}
+p a:hover {
+    background-color: #9000ff;
+    color: white;
+}
+
+footer {
+    color: white;
+    background-color: #9000ff;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 0 20px 1px black;
+}
+footer a{
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+footer a:hover{
+    color: black;
+    background-color: aqua;
 }
