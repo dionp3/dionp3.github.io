@@ -1,132 +1,116 @@
 body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #4db2ff;
 }
 
-nav {
-    position: fixed;
-    font-size: 20px;
-    font-weight: 700;
-    background-color: #9000ff;
-    width: 100%;
-    top: 0;
-    box-shadow: 0 0 20px 5px black;
-}
-.navdiv {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: 15px;
-    padding-right: 15px;
-}
-li {
-    display: inline-block;
-}
-nav a {
-    margin-right: 10px;
-    color: white;
-    text-decoration: none;
-}
-nav a:hover {
-    background-color: aqua;
-    color: black;
+h1 {
+  text-align: center;
+  color: #ffffff;
 }
 
-.front {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    margin-right: 100px;
-}
-.text {
-    font-size: 20px;
-    color: white;
-    margin-top: 150px;
-    margin-bottom: 150px;
-    padding: 6%;
-}
-.text:hover {
-    color: gold;
-}
-.image {
-    border-radius: 20%;
-    overflow: hidden;
-    margin-top: 150px;
-    margin-bottom: 150px;
-}
-.image img {
-    width: 400px;
+h2 {
+  margin-top: 20px;
+  color: #151515;
 }
 
-.homee {
-    background-image: url(images/IMG_2982.JPG);
-    background-size: cover;
-    background-position: center;
-    width: 100%;
+h3 {
+  text-align: center;
 }
 
-main {
-    text-align: justify;
-    margin: 4%;
+h3 a {
+  text-decoration: none;
 }
 
-.content h1 {
-    text-align: center;
+#box {
+  max-width: 600px;
+  margin: auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 40px;
+  box-shadow: 0 4px 6px rgb(0, 0, 0);
 }
 
-.content {
-    
+#taskInput, #dateInput {
+  width: 100%;
+  padding: 10px;
+  max-width: 578px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  font-size: 16px;
+  outline: none;
 }
 
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
+#addButton {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 20px;
+  transition: background-color 0.3s;
 }
 
-.gallery img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
+#addButton:hover {
+  background-color: #5fd365;
 }
 
-.contact ul li a {
-    text-decoration: none;
-    color: black;
-}
-ul li a:hover{
-    background-color: #9000ff;
-    color: gold;
-}
-
-
-form {
-    font-weight: bold;
+#searchInput {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+  outline: none;
 }
 
-p a {
-    text-decoration: none;
-    color: black;
+#taskList, #taskDoneList {
+  list-style-type: none;
+  padding: 0;
 }
-p a:hover {
-    background-color: #9000ff;
-    color: white;
+  
+.taskItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0);
+}
+  
+.taskText {
+  flex-grow: 1;
+  margin-left: 10px;
+  font-size: 16px;
+  color: #333;
+}
+  
+.dateText {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #888;
+}
+  
+.deleteButton {
+  background-color: #e6e6e6;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 20px;
+  transition: background-color 0.3s;
+}
+  
+.deleteButton:hover {
+  background-color: #e53935;
 }
 
 footer {
-    color: white;
-    background-color: #9000ff;
-    padding: 10px;
-    text-align: center;
-    box-shadow: 0 0 20px 1px black;
-}
-footer a{
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
-}
-footer a:hover{
-    color: black;
-    background-color: aqua;
+  margin-top: 50px;
 }

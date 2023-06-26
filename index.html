@@ -4,102 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dion Prayoga</title>
+    <title>Todo List dionp3</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header id="home" class="homee">
-        <nav class="nav">
-            <div class="navdiv">
-                <div><a href="#home">DION PRAYOGA</a></div>
-                <ul>
-                    <li><a href="#home">HOME</a></li>
-                    <li><a href="#about">ABOUT</a></li>
-                    <li><a href="#portofolio">PORTOFOLIO</a></li>
-                    <li><a href="#contact">CONTACT</a></li>
-                </ul>
-            </div>
-        </nav>
-        <div class="front">
-            <div class="text">
-                <h1>I'm Dion Prayoga</h1>
-                <p>Informatics student at Kalimantan Institute of Technology <br> I like travelling, graphic design and photography</p>
-            </div>
-            <div class="image">
-                <img src="images/DSCN0615.JPG" alt="images">
-            </div>
-        </div>
+    <header>
+        <h1>TODO LIST</h1>
+        <h3>dionp3</h3>
     </header>
-    <main id="main">
-        <div class="content">
-            <section id="about">
-                <article>
-                    <h1>hello everyone, bonjour.</h1>
-                    <h1>Welcome to my personal website</h1>
-                    <p>
-                        My name is Dion Prayoga, so i'm from Indonesia who live in Balikpapan. Some of my hobbies are travelling, graphic design and photography. Why i like travelling? because when we are travelling we can know some new culture, some new places, some new experiences, and of course many more.
-                    </p>
-                    <p>
-                        Actually i like graphic design too when i'm still high school.
-                    </p>
-                    <p>
-                        And why i like photography? because some moment will going just past of our life and time is always going forward so i want to capture the moment to become valuable memories which we can see again in  the future and know its a heck of journey our life.
-                    </p>
-                    <p>
-                        That's a brief thing about me.
-                    </p>
-                </article>
-            </section>
-            <section id="portofolio">
-                <article>
-                    <h1>PORTOFOLIO</h1>
-                    <p>
-                        So my portofolio is actually a gallery photos because i like to capture moment so we can remember the journey of our life.
-                    </p>
-                    <div class="gallery">
-                        <img src="images/WhatsApp Image 2023-06-09 at 14.14w.29.jpg" alt="Image 1">
-                        <img src="images/DSCN0628.JPG" alt="Image 2">
-                        <img src="images/WhatsApp Image 2023-06-09 at 14.14.29.jpg" alt="Image 3">
-                        <img src="images/WhatsApp Image 2023-06-09 at 14.05.40.jpg" alt="Image 4">
-                        <img src="images/WhatsApp Image 2023-06-09 at 14d.05.41.jpg" alt="Image 5">
-                        <img src="images/WhatsApp Image 2023-06-f09 at 14.05.40.jpg" alt="Image 6">
-                    </div>
-                    <p>See my <a href="https://www.instagram.com/dionp3">instagram dionp3</a> to see more photos.</p>
-                </article>
-            </section>
-            <section id="contact" class="contact">
-                <article>
-                    <h1>CONTACT</h1>
-                    <p>
-                        You can reach me on :
-                    </p>
-                    <ul>
-                        <li><a href="https://www.instagram.com/dionp3">Instagram dionp3</a></li> <br>   
-                        <li><a href="https://www.github.com/dionp3">Github dionp3</a></li>
-                    </ul>
-                </article>
-            </section>
-            <section>
-                <form id="comment" onsubmit="submitForm(event)">
-                    <h3>Comments</h3>
-                    <label for="name">Name</label><br>
-                    <input required type="text" id="name"><br>
-                    <label for="email">Email</label><br>
-                    <input required type="email" id="email"><br>
-                    <label for="comment">Feel free to ask me anything</label><br>
-                    <textarea id="comment" cols="50" rows="10"></textarea><br>
-                    <input required placeholder="ask me anything" type="submit" value="submit">
-                </form>
-                <div id="comments-container"></div>
-            </section>
+    <main>
+        <div id="box">
+            <input required id="taskInput" type="text" placeholder="Add task here">
+            <input id="dateInput" type="date">
+            <button id="addButton">Add</button>
+            <input id="searchInput" type="text" placeholder="Search tasks">
+            <h2>Tasks:</h2>
+            <ul id="taskList"></ul>
+            <h2>Tasks Done:</h2>
+            <ul id="taskDoneList"></ul>
         </div>
     </main>
-    <footer id="footer">
-        <h1></h1>
-        <a href="https://www.instagram.com/dionp3">INSTAGRAM</a>
-        <a href="https://www.github.com/dionp3">GITHUB</a>
-        <p>Copyright @ 2023 by <a href="https://www.instagram.com/dionp3">Dion Prayoga</a></p>
-        <p>All right reserved.</p>
+    <footer>
+        <h3>Copyright @ 2023 by <a href="https://www.instagram.com/dionp3">Dion Prayoga</a></h3>
+        <h3>All right reserved.</h3>
     </footer>
     <script src="script.js"></script>
 </body>
