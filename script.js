@@ -1,223 +1,231 @@
-$(document).ready(function() {
-  // Hide the register and notes containers initially
-  $("#register-container").hide();
-  $("#notes-container").hide();
+//javascript is hardd, but i know i must do it, nothing is easy in this world
 
-  // Show the register container when the register link is clicked
-  $("#register-link").click(function(e) {
-    e.preventDefault();
-    $("#login-container").hide();
-    $("#register-container").show();
-  });
+const BASE_URL = 'https://notes-api.dicoding.dev/v1';
+let accessToken = '';
 
-  // Show the login container when the login link is clicked
-  $("#login-link").click(function(e) {
-    e.preventDefault();
-    $("#register-container").hide();
-    $("#login-container").show();
-  });
+function showRegisterForm() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('registerForm').style.display = 'block';
+}
 
-  // Register a new user
-  $("#register-btn").click(function() {
-    var name = $("#register-name").val();
-    var email = $("#register-email").val();
-    var password = $("#register-password").val();
+function showLoginForm() {
+  document.getElementById('registerForm').style.display = 'none';
+  document.getElementById('loginForm').style.display = 'block';
+}
 
-    $.ajax({
-      url: "https://notes-api.dicoding.dev/v1/register",
-      method: "POST",
-      data: {
-        name: name,
-        email: email,
-        password: password
-      },
-      success: function(response) {
-        alert("Registration successful. Please log in.");
-        $("#register-name").val("");
-        $("#register-email").val("");
-        $("#register-password").val("");
-        $("#login-container").show();
-        $("#register-container").hide();
-      },
-      error: function(xhr, status, error) {
-        var errorMessage = JSON.parse(xhr.responseText).message;
-        $("#register-error-msg").text(errorMessage);
-      }
-    });
-  });
-
-  // Create a note
-  function createNote() {
-    var title = $("#note-title").val();
-    var body = $("#note-body").val();
-    var accessToken = localStorage.getItem("accessToken");
-
-    $.ajax({
-      url: "https://notes-api.dicoding.dev/v1/notes",
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + accessToken
-      },
-      data: {
-        title: title,
-        body: body
-      },
-      success: function(response) {
-        var note = response.data;
-        var notesContainer = $("#notes-container");
-
-        var noteElement = $("<div class='note'>");
-        noteElement.append("<h2>" + note.title + "</h2>");
-        noteElement.append("<p>" + note.body + "</p>");
-        noteElement.append("<button class='archive-btn' data-note-id='" + note.id + "'>Archive</button>");
-        noteElement.append("<button class='delete-btn' data-note-id='" + note.id + "'>Delete</button>");
-
-        notesContainer.append(noteElement);
-
-        $("#note-title").val("");
-        $("#note-body").val("");
-      },
-      error: function(xhr, status, error) {
-        var errorMessage = JSON.parse(xhr.responseText).message;
-        alert("Error: " + errorMessage);
-      }
-    });
-  }
-
-  // Show create note form
-  function showCreateNoteForm() {
-    $("#notes-container").hide();
-    $("#create-note-container").show();
-  }
-
-  // Hide create note form
-  function hideCreateNoteForm() {
-    $("#create-note-container").hide();
-    $("#notes-container").show();
-  }
-
-  // Event listener for add new note button
-  $("#add-note-btn").click(function() {
-    showCreateNoteForm();
-  });
-
-  // Event listener for create note form cancel button
-  $("#cancel-btn").click(function() {
-    hideCreateNoteForm();
-  });
-
-  // Event listener for create note form submit
-  $("#create-note-form").submit(function(e) {
-    e.preventDefault();
-    createNote();
-    hideCreateNoteForm();
-  });
-
-  // Load user's notes
-  function loadNotes() {
-    var accessToken = localStorage.getItem("accessToken");
-
-    $.ajax({
-      url: "https://notes-api.dicoding.dev/v1/notes",
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + accessToken
-      },
-      success: function(response) {
-        var notes = response.data;
-        var notesContainer = $("#notes-container");
-        notesContainer.empty();
-
-        if (notes.length === 0) {
-          notesContainer.append("<p>No notes found.</p>");
-
-          // Add form to create a new note
-          var createNoteForm = $("<form id='create-note-form'>");
-          createNoteForm.append("<label for='note-title'>Title:</label>");
-          createNoteForm.append("<input type='text' id='note-title' required>");
-          createNoteForm.append("<label for='note-body'>Body:</label>");
-          createNoteForm.append("<textarea id='note-body' required></textarea>");
-          createNoteForm.append("<button type='submit'>Create Note</button>");
-          createNoteForm.append("<button id='cancel-btn' type='button'>Cancel</button>");
-          notesContainer.append(createNoteForm);
-        } else {
-          notes.forEach(function(note) {
-            var noteElement = $("<div class='note'>");
-            noteElement.append("<h2>" + note.title + "</h2>");
-            noteElement.append("<p>" + note.body + "</p>");
-            noteElement.append("<button class='archive-btn' data-note-id='" + note.id + "'>Archive</button>");
-            noteElement.append("<button class='delete-btn' data-note-id='" + note.id + "'>Delete</button>");
-
-            if (note.archived) {
-              noteElement.addClass("archived");
-              noteElement.find(".archive-btn").text("Unarchive");
-            }
-
-            notesContainer.append(noteElement);
-          });
-        }
-      },
-      error: function(xhr, status, error) {
-        var errorMessage = JSON.parse(xhr.responseText).message;
-        alert("Error: " + errorMessage);
-      }
-    });
-  }
-
-  // Delete a note
-  $(document).on("click", ".delete-btn", function() {
-    if (confirm("Are you sure you want to delete this note?")) {
-      var noteId = $(this).data("note-id");
-      var accessToken = localStorage.getItem("accessToken");
-
-      $.ajax({
-        url: "https://notes-api.dicoding.dev/v1/notes/" + noteId,
-        method: "DELETE",
-        headers: {
-          Authorization: "Bearer " + accessToken
-        },
-        success: function(response) {
-          loadNotes();
-        },
-        error: function(xhr, status, error) {
-          var errorMessage = JSON.parse(xhr.responseText).message;
-          alert("Error: " + errorMessage);
-        }
-      });
+function registerUser(event) {
+  event.preventDefault();
+  
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  
+  fetch(`${BASE_URL}/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      email: email,
+      password: password
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert('User created successfully');
+    } else {
+      alert('Error creating user');
     }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred, sowry');
   });
+}
 
-  // Login function
-  function login() {
-    var email = $("#login-email").val();
-    var password = $("#login-password").val();
+function loginUser(event) {
+  event.preventDefault();
 
-    $.ajax({
-      url: "https://notes-api.dicoding.dev/v1/login",
-      method: "POST",
-      data: {
-        email: email,
-        password: password
-      },
-      success: function(response) {
-        var accessToken = response.data.accessToken;
-        localStorage.setItem("accessToken", accessToken);
-        loadNotes();
-        $("#login-email").val("");
-        $("#login-password").val("");
-        $("#login-container").hide();
-        $("#notes-container").show();
-      },
-      error: function(xhr, status, error) {
-        var errorMessage = JSON.parse(xhr.responseText).message;
-        $("#error-msg").text(errorMessage);
-      }
-    });
-  }
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
 
-  // Event listener for login form submit
-  $("#login-form").submit(function(e) {
-    e.preventDefault();
-    login();
+  fetch(`${BASE_URL}/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      accessToken = data.data.accessToken;
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('notesForm').style.display = 'block';
+      document.getElementById('notesList').style.display = 'block';
+      getNotes();
+      createWelcomeNote();
+    } else {
+      alert('Invalid credentials');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred, sowry');
   });
-});
+}
+
+function createNote(event) {
+  event.preventDefault();
+  
+  const title = document.getElementById('noteTitle').value;
+  const body = document.getElementById('noteBody').value;
+  
+  fetch(`${BASE_URL}/notes`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
+    },
+    body: JSON.stringify({
+      title: title,
+      body: body
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert('Note created successfully');
+      document.getElementById('noteTitle').value = '';
+      document.getElementById('noteBody').value = '';
+      getNotes();
+    } else {
+      alert('Error creating note sowry');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred, sowry');
+  });
+}
+
+function createNoteElement(note) {
+  const li = document.createElement('li');
+  li.classList.add('note');
+
+  const titleElem = document.createElement('strong');
+  titleElem.innerText = note.title;
+  li.appendChild(titleElem);
+
+  const bodyElem = document.createElement('p');
+  bodyElem.innerText = note.body;
+  li.appendChild(bodyElem);
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.innerText = 'Delete';
+  deleteBtn.addEventListener('click', () => deleteNote(note.id));
+
+  li.appendChild(deleteBtn);
+  return li;
+}
+
+function getNotes() {
+  fetch(`${BASE_URL}/notes`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      const notes = data.data;
+      const noteItems = document.getElementById('noteItems');
+      noteItems.innerHTML = '';
+
+      notes.forEach(note => {
+        const li = createNoteElement(note);
+        noteItems.appendChild(li);
+      });
+    } else {
+      alert('Error retrieving notes, sowry');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred, sowry');
+  });
+}
+
+function createWelcomeNote() {
+  fetch(`${BASE_URL}/users/me`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      const user = data.data;
+      const title = `Welcome to Notes, ${user.name}!`;
+      const body = 'This is your note. You now can create notes and delete it. Have fun!';
+
+      fetch(`${BASE_URL}/notes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          title: title,
+          body: body
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          console.log('Welcome note created successfully');
+        } else {
+          console.log('Error creating welcome note');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred, sowry');
+      });
+    } else {
+      console.log('Error retrieving user data');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred, sowry');
+  });
+}
+
+function deleteNote(noteId) {
+  fetch(`${BASE_URL}/notes/${noteId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert('Note deleted successfully');
+      getNotes();
+    } else {
+      alert('Error deleting note, sowry');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred, sowry');
+  });
+}

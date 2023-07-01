@@ -1,49 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notes App</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Notes API Dicoding</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <div id="login-container">
-      <h1>Login</h1>
-      <input type="text" id="login-email" placeholder="Email" required>
-      <input type="password" id="login-password" placeholder="Password" required>
-      <button id="login-btn">Login</button>
-      <p id="error-msg" class="error-msg"></p>
-      <p>Don't have an account? <a href="#" id="register-link">Register here</a></p>
-    </div>
+    <h1>Notes API dicoding</h1>
+    <h3>By <a href="https://www.instagram.com/dionp3">-dionp3-</a></h3>
 
-    <div id="register-container">
-      <h1>Register</h1>
-      <input type="text" id="register-name" placeholder="Name" required>
-      <input type="email" id="register-email" placeholder="Email" required>
-      <input type="password" id="register-password" placeholder="Password (at least 6 characters)" required>
-      <button id="register-btn">Register</button>
-      <p id="register-error-msg" class="error-msg"></p>
-      <p>Already have an account? <a href="#" id="login-link">Login here</a></p>
+    <div id="loginForm" class="box">
+      <h2>Login</h2>
+      <form id="login" onsubmit="loginUser(event)">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Register</a></p>
     </div>
-
-    <div id="notes-container">
-      <h1>My Notes</h1>
+    
+    <div id="registerForm" class="box" style="display: none;">
+      <h2>Register</h2>
+      <form id="register" onsubmit="registerUser(event)">
+        <input type="text" id="name" placeholder="Your name here please" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password (min 6 character)" required>
+        <button type="submit">Register</button>
+      </form>
+      <p>Already have an account? <a href="#" onclick="showLoginForm()">Login</a></p>
     </div>
-
-    <div id="create-note-container">
-      <h1>Create Note</h1>
-      <form id="create-note-form">
-        <label for="note-title">Title:</label>
-        <input type="text" id="note-title" required>
-        <label for="note-body">Body:</label>
-        <textarea id="note-body" required></textarea>
-        <button type="submit">Create Note</button>
-        <button id="cancel-btn" type="button">Cancel</button>
+    
+    <div id="notesForm" class="box" style="display: none;">
+      <h2>Create New Note</h2>
+      <form id="createNote" onsubmit="createNote(event)">
+        <input type="text" id="noteTitle" placeholder="Title" required>
+        <textarea id="noteBody" placeholder="Description" required></textarea>
+        <button type="submit">Create</button>
       </form>
     </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div id="notesList" style="display: none;">
+      <h2>Notes</h2>
+      <ul id="noteItems"></ul>
+    </div>
+  </div>
+
+  <footer>
+    <h3>Copyright @ 2023 by <a href="https://www.instagram.com/dionp3">Dion Prayoga</a></h3>
+    <h3>All right reserved.</h3>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>
