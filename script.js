@@ -1,106 +1,223 @@
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-let tasksDone = JSON.parse(localStorage.getItem('tasksDone')) || [];
+$(document).ready(function() {
+  // Hide the register and notes containers initially
+  $("#register-container").hide();
+  $("#notes-container").hide();
 
-function renderTasks(listId, taskArray, isDoneItem = false) {
-  const taskList = document.getElementById(listId);
-  taskList.innerHTML = '';
-
-  const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
-
-  const filteredTasks = taskArray.filter(task => task.name.toLowerCase().includes(searchQuery));
-
-  filteredTasks.forEach((task, index) => {
-    const taskItem = createTaskItem(task, index, isDoneItem);
-    taskList.appendChild(taskItem);
+  // Show the register container when the register link is clicked
+  $("#register-link").click(function(e) {
+    e.preventDefault();
+    $("#login-container").hide();
+    $("#register-container").show();
   });
-}
 
-function createTaskItem(task, index, isDoneItem = false) {
-  const taskItem = document.createElement('li');
-  taskItem.className = `taskItem ${isDoneItem ? 'doneItem' : ''}`;
+  // Show the login container when the login link is clicked
+  $("#login-link").click(function(e) {
+    e.preventDefault();
+    $("#register-container").hide();
+    $("#login-container").show();
+  });
 
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = task.completed;
-  checkbox.className = 'doneCheckbox';
-  checkbox.addEventListener('change', () => toggleTaskStatus(index, isDoneItem));
+  // Register a new user
+  $("#register-btn").click(function() {
+    var name = $("#register-name").val();
+    var email = $("#register-email").val();
+    var password = $("#register-password").val();
 
-  const taskText = document.createElement('span');
-  taskText.className = 'taskText';
-  taskText.innerText = task.name;
+    $.ajax({
+      url: "https://notes-api.dicoding.dev/v1/register",
+      method: "POST",
+      data: {
+        name: name,
+        email: email,
+        password: password
+      },
+      success: function(response) {
+        alert("Registration successful. Please log in.");
+        $("#register-name").val("");
+        $("#register-email").val("");
+        $("#register-password").val("");
+        $("#login-container").show();
+        $("#register-container").hide();
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = JSON.parse(xhr.responseText).message;
+        $("#register-error-msg").text(errorMessage);
+      }
+    });
+  });
 
-  const dateText = document.createElement('span');
-  dateText.className = 'dateText';
-  dateText.innerText = task.date;
+  // Create a note
+  function createNote() {
+    var title = $("#note-title").val();
+    var body = $("#note-body").val();
+    var accessToken = localStorage.getItem("accessToken");
 
-  const deleteButton = document.createElement('button');
-  deleteButton.className = 'deleteButton';
-  deleteButton.innerText = 'Delete';
-  deleteButton.addEventListener('click', () => deleteTask(index, isDoneItem));
+    $.ajax({
+      url: "https://notes-api.dicoding.dev/v1/notes",
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + accessToken
+      },
+      data: {
+        title: title,
+        body: body
+      },
+      success: function(response) {
+        var note = response.data;
+        var notesContainer = $("#notes-container");
 
-  taskItem.append(checkbox, taskText, dateText, deleteButton);
+        var noteElement = $("<div class='note'>");
+        noteElement.append("<h2>" + note.title + "</h2>");
+        noteElement.append("<p>" + note.body + "</p>");
+        noteElement.append("<button class='archive-btn' data-note-id='" + note.id + "'>Archive</button>");
+        noteElement.append("<button class='delete-btn' data-note-id='" + note.id + "'>Delete</button>");
 
-  return taskItem;
-}
+        notesContainer.append(noteElement);
 
-function addTask() {
-  const taskInput = document.getElementById('taskInput');
-  const dateInput = document.getElementById('dateInput');
-  const taskName = taskInput.value.trim();
-  const taskDate = dateInput.value;
-
-  if (taskName !== '') {
-    const id = +new Date();
-
-    const newTask = {
-      id,
-      name: taskName,
-      date: taskDate,
-      completed: false
-    };
-
-    tasks.push(newTask);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    renderTasks('taskList', tasks);
-    taskInput.value = '';
-    dateInput.value = '';
+        $("#note-title").val("");
+        $("#note-body").val("");
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = JSON.parse(xhr.responseText).message;
+        alert("Error: " + errorMessage);
+      }
+    });
   }
-}
 
-function toggleTaskStatus(index, fromDoneSection) {
-  const sourceArray = fromDoneSection ? tasksDone : tasks;
-  const targetArray = fromDoneSection ? tasks : tasksDone;
+  // Show create note form
+  function showCreateNoteForm() {
+    $("#notes-container").hide();
+    $("#create-note-container").show();
+  }
 
-  const task = sourceArray[index];
-  task.completed = !task.completed;
+  // Hide create note form
+  function hideCreateNoteForm() {
+    $("#create-note-container").hide();
+    $("#notes-container").show();
+  }
 
-  targetArray.push(task);
-  sourceArray.splice(index, 1);
+  // Event listener for add new note button
+  $("#add-note-btn").click(function() {
+    showCreateNoteForm();
+  });
 
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  localStorage.setItem('tasksDone', JSON.stringify(tasksDone));
+  // Event listener for create note form cancel button
+  $("#cancel-btn").click(function() {
+    hideCreateNoteForm();
+  });
 
-  renderTasks('taskList', tasks);
-  renderTasks('taskDoneList', tasksDone, true);
-}
+  // Event listener for create note form submit
+  $("#create-note-form").submit(function(e) {
+    e.preventDefault();
+    createNote();
+    hideCreateNoteForm();
+  });
 
-function deleteTask(index, fromDoneSection) {
-  const taskArray = fromDoneSection ? tasksDone : tasks;
-  taskArray.splice(index, 1);
+  // Load user's notes
+  function loadNotes() {
+    var accessToken = localStorage.getItem("accessToken");
 
-  const storageKey = fromDoneSection ? 'tasksDone' : 'tasks';
-  localStorage.setItem(storageKey, JSON.stringify(taskArray));
+    $.ajax({
+      url: "https://notes-api.dicoding.dev/v1/notes",
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + accessToken
+      },
+      success: function(response) {
+        var notes = response.data;
+        var notesContainer = $("#notes-container");
+        notesContainer.empty();
 
-  renderTasks(fromDoneSection ? 'taskDoneList' : 'taskList', taskArray, fromDoneSection);
-}
+        if (notes.length === 0) {
+          notesContainer.append("<p>No notes found.</p>");
 
-function handleSearchInput() {
-  renderTasks('taskList', tasks);
-  renderTasks('taskDoneList', tasksDone, true);
-}
+          // Add form to create a new note
+          var createNoteForm = $("<form id='create-note-form'>");
+          createNoteForm.append("<label for='note-title'>Title:</label>");
+          createNoteForm.append("<input type='text' id='note-title' required>");
+          createNoteForm.append("<label for='note-body'>Body:</label>");
+          createNoteForm.append("<textarea id='note-body' required></textarea>");
+          createNoteForm.append("<button type='submit'>Create Note</button>");
+          createNoteForm.append("<button id='cancel-btn' type='button'>Cancel</button>");
+          notesContainer.append(createNoteForm);
+        } else {
+          notes.forEach(function(note) {
+            var noteElement = $("<div class='note'>");
+            noteElement.append("<h2>" + note.title + "</h2>");
+            noteElement.append("<p>" + note.body + "</p>");
+            noteElement.append("<button class='archive-btn' data-note-id='" + note.id + "'>Archive</button>");
+            noteElement.append("<button class='delete-btn' data-note-id='" + note.id + "'>Delete</button>");
 
-document.getElementById('addButton').addEventListener('click', addTask);
-document.getElementById('searchInput').addEventListener('input', handleSearchInput);
+            if (note.archived) {
+              noteElement.addClass("archived");
+              noteElement.find(".archive-btn").text("Unarchive");
+            }
 
-renderTasks('taskList', tasks);
-renderTasks('taskDoneList', tasksDone, true);
+            notesContainer.append(noteElement);
+          });
+        }
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = JSON.parse(xhr.responseText).message;
+        alert("Error: " + errorMessage);
+      }
+    });
+  }
+
+  // Delete a note
+  $(document).on("click", ".delete-btn", function() {
+    if (confirm("Are you sure you want to delete this note?")) {
+      var noteId = $(this).data("note-id");
+      var accessToken = localStorage.getItem("accessToken");
+
+      $.ajax({
+        url: "https://notes-api.dicoding.dev/v1/notes/" + noteId,
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + accessToken
+        },
+        success: function(response) {
+          loadNotes();
+        },
+        error: function(xhr, status, error) {
+          var errorMessage = JSON.parse(xhr.responseText).message;
+          alert("Error: " + errorMessage);
+        }
+      });
+    }
+  });
+
+  // Login function
+  function login() {
+    var email = $("#login-email").val();
+    var password = $("#login-password").val();
+
+    $.ajax({
+      url: "https://notes-api.dicoding.dev/v1/login",
+      method: "POST",
+      data: {
+        email: email,
+        password: password
+      },
+      success: function(response) {
+        var accessToken = response.data.accessToken;
+        localStorage.setItem("accessToken", accessToken);
+        loadNotes();
+        $("#login-email").val("");
+        $("#login-password").val("");
+        $("#login-container").hide();
+        $("#notes-container").show();
+      },
+      error: function(xhr, status, error) {
+        var errorMessage = JSON.parse(xhr.responseText).message;
+        $("#error-msg").text(errorMessage);
+      }
+    });
+  }
+
+  // Event listener for login form submit
+  $("#login-form").submit(function(e) {
+    e.preventDefault();
+    login();
+  });
+});

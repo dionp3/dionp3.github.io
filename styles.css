@@ -1,116 +1,47 @@
 body {
   font-family: Arial, sans-serif;
+  line-height: 1.6;
   margin: 0;
+  padding: 0;
+  background-color: #f7f7f7;
+}
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
   padding: 20px;
-  background-color: #4db2ff;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  text-align: center;
-  color: #ffffff;
+  margin-top: 0;
 }
 
-h2 {
-  margin-top: 20px;
-  color: #151515;
-}
-
-h3 {
-  text-align: center;
-}
-
-h3 a {
-  text-decoration: none;
-}
-
-#box {
-  max-width: 600px;
-  margin: auto;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 40px;
-  box-shadow: 0 4px 6px rgb(0, 0, 0);
-}
-
-#taskInput, #dateInput {
+input, button {
+  display: block;
   width: 100%;
-  padding: 10px;
-  max-width: 578px;
   margin-bottom: 10px;
-  border-radius: 20px;
+  padding: 10px;
   font-size: 16px;
-  outline: none;
 }
 
-#addButton {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #4CAF50;
-  color: white;
+button {
+  background-color: #007bff;
+  color: #fff;
   border: none;
   cursor: pointer;
-  font-size: 16px;
-  border-radius: 20px;
-  transition: background-color 0.3s;
 }
 
-#addButton:hover {
-  background-color: #5fd365;
+.error-msg {
+  color: red;
+  margin-bottom: 10px;
 }
 
-#searchInput {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  font-size: 16px;
-  outline: none;
+#register-container {
+  display: none;
 }
 
-#taskList, #taskDoneList {
-  list-style-type: none;
-  padding: 0;
-}
-  
-.taskItem {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0);
-}
-  
-.taskText {
-  flex-grow: 1;
-  margin-left: 10px;
-  font-size: 16px;
-  color: #333;
-}
-  
-.dateText {
-  margin-left: 10px;
-  font-size: 14px;
-  color: #888;
-}
-  
-.deleteButton {
-  background-color: #e6e6e6;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  margin-left: 10px;
-  cursor: pointer;
-  font-size: 14px;
-  border-radius: 20px;
-  transition: background-color 0.3s;
-}
-  
-.deleteButton:hover {
-  background-color: #e53935;
-}
-
-footer {
-  margin-top: 50px;
+#create-note-container {
+  display: none;
 }
